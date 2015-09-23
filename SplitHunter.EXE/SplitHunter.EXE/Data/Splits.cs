@@ -65,7 +65,12 @@ namespace SplitHunter.EXE.Data
 
         public void Save()
         {
-            File.WriteAllLines(FullPath, ToLines());
+            var lines = ToLines();
+
+            if (File.Exists(FullPath))
+                File.Delete(FullPath);
+            File.WriteAllLines(FullPath, lines);
+
             Dirty = false;
         }
 

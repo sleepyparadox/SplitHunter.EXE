@@ -38,6 +38,8 @@
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TreeView = new System.Windows.Forms.TreeView();
+            this.EditText = new System.Windows.Forms.TextBox();
+            this.EditLabel = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,7 +72,7 @@
             this.runToolStripMenuItem,
             this.emptyToolStripMenuItem});
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.newToolStripMenuItem.Text = "New";
             // 
             // runToolStripMenuItem
@@ -90,20 +92,21 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.Open);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.Save);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsClicked);
             // 
@@ -121,11 +124,31 @@
             this.TreeView.Size = new System.Drawing.Size(417, 432);
             this.TreeView.TabIndex = 1;
             // 
+            // EditText
+            // 
+            this.EditText.Location = new System.Drawing.Point(161, 209);
+            this.EditText.Name = "EditText";
+            this.EditText.Size = new System.Drawing.Size(244, 22);
+            this.EditText.TabIndex = 2;
+            this.EditText.Text = "Jack Gets Punched";
+            // 
+            // EditLabel
+            // 
+            this.EditLabel.AutoSize = true;
+            this.EditLabel.Location = new System.Drawing.Point(92, 212);
+            this.EditLabel.Name = "EditLabel";
+            this.EditLabel.Size = new System.Drawing.Size(63, 17);
+            this.EditLabel.TabIndex = 3;
+            this.EditLabel.Text = "Current: ";
+            this.EditLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // SplitEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(417, 460);
+            this.Controls.Add(this.EditLabel);
+            this.Controls.Add(this.EditText);
             this.Controls.Add(this.TreeView);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -150,6 +173,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.TextBox EditText;
+        private System.Windows.Forms.Label EditLabel;
     }
 }
 

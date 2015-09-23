@@ -23,9 +23,14 @@ namespace SplitHunter.EXE
         }
 
         //Windows is the slash exception handle it once here
-        public static string ToWindowsPath(this string forwardSlashedPath)
+        public static string ToBackSlashPath(this string forwardSlashedPath)
         {
             return forwardSlashedPath.Replace("/", "\\");
+        }
+
+        public static string ToForwardPath(this string backwardSlashedPath)
+        {
+            return backwardSlashedPath.Replace("\\", "/");
         }
     }
 }

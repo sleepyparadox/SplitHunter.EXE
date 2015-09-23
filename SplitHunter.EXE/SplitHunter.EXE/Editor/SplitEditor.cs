@@ -27,7 +27,7 @@ namespace SplitHunter.EXE.Editor
         public SplitEditor()
         {
             InitializeComponent();
-            _treeEditor = new SplitTreeEditor(TreeView);
+            _treeEditor = new SplitTreeEditor(TreeView, EditText, EditLabel, this);
             Render();
         }
 
@@ -47,18 +47,42 @@ namespace SplitHunter.EXE.Editor
 
         private void CloneExisting(object s = null, EventArgs e = null)
         {
+            string path;
+            if(OpenFileDialog(out path))
+            {
+                CurrentSplits = Splits.CloneExisting(path.ToForwardPath());
+            }
+        }
+
+        private void Open(object s = null, EventArgs e = null)
+        {
+            string path;
+            if (OpenFileDialog(out path))
+            {
+                CurrentSplits = Splits.Open(path.ToForwardPath());
+            }
+        }
+
+        private bool OpenFileDialog(out string path)
+        {
             if (!Directory.Exists(Splits.DefaultSplitsDirectory))
                 Directory.CreateDirectory(Splits.DefaultSplitsDirectory);
 
             var dialog = new OpenFileDialog();
             dialog.Filter = FileFilter;
-            dialog.InitialDirectory = Splits.DefaultSplitsDirectory.ToWindowsPath();
+            dialog.InitialDirectory = Splits.DefaultSplitsDirectory.ToBackSlashPath();
             dialog.AutoUpgradeEnabled = false;
             dialog.Multiselect = false;
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                CurrentSplits = Splits.CloneExisting(dialog.FileName);
+                path = dialog.FileName;
+                return true;
+            }
+            else
+            {
+                path = null;
+                return false;
             }
         }
 
@@ -82,7 +106,7 @@ namespace SplitHunter.EXE.Editor
             var dialog = new SaveFileDialog();
             dialog.Filter = FileFilter;
             dialog.AutoUpgradeEnabled = false;
-            dialog.FileName = CurrentSplits.FullPath.ToWindowsPath();
+            dialog.FileName = CurrentSplits.FullPath.ToBackSlashPath();
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -90,6 +114,17 @@ namespace SplitHunter.EXE.Editor
                 CurrentSplits.Save();
                 Render();
             }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.S))
+            {
+                _treeEditor.TryApplyEditChanges();
+                Save();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private const string FileFilter = "txt (*.txt)|*.txt|csv (*.csv)|*.csv|All Files (*.*)|*.*";

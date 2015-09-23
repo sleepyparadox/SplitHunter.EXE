@@ -47,12 +47,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Split.cs" />
+    <Compile Include="Editor\EditableNode.cs" />
     <Compile Include="Editor\SplitEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Editor\SplitEditor.Designer.cs">
       <DependentUpon>SplitEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editor\SplitNode.cs" />
     <Compile Include="Editor\SplitTreeEditor.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Program.cs" />
