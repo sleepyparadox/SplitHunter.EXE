@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SplitHunter.EXE
 {
@@ -32,5 +34,27 @@ namespace SplitHunter.EXE
         {
             return backwardSlashedPath.Replace("\\", "/");
         }
+
+        public static void PerformRecursive(this Control control, Action<Control> action)
+        {
+            action(control);
+            foreach (Control child in control.Controls)
+                PerformRecursive(child, action);
+        }
+
+        public static Point GetWorldLocation(this Control control)
+        {
+            var worldPos = control.Location;
+            var parent = control.Parent;
+            while(parent != null)
+            {
+                worldPos.X += parent.Location.X;
+                worldPos.Y += parent.Location.Y;
+
+                parent = parent.Parent;
+            }
+            return worldPos;
+        }
+
     }
 }

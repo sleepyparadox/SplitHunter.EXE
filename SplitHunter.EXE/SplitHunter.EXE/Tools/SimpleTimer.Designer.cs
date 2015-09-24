@@ -39,9 +39,9 @@
             this.SplitButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.RightClickContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1.SuspendLayout();
+            this.RightClickContext.SuspendLayout();
             this.SuspendLayout();
             // 
             // ElapsedText
@@ -140,16 +140,16 @@
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RightClickContext.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.RightClickContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(121, 30);
+            this.RightClickContext.Name = "contextMenuStrip1";
+            this.RightClickContext.Size = new System.Drawing.Size(121, 30);
             // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(120, 26);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.resetToolStripMenuItem_Click);
             // 
@@ -172,7 +172,8 @@
             this.MinimizeBox = false;
             this.Name = "SimpleTimer";
             this.Text = "SimpleTimer";
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SimpleTimer_FormClosed);
+            this.RightClickContext.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -189,7 +190,7 @@
         private System.Windows.Forms.Button SplitButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ContextMenuStrip RightClickContext;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
     }
 }

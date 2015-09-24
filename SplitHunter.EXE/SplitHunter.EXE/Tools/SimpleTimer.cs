@@ -14,6 +14,8 @@ namespace SplitHunter.EXE.Tools
 {
     public partial class SimpleTimer : Form
     {
+        public bool SaveOnSplit { get; set; }
+
         TimeSpan Elapsed
         {
             get
@@ -24,6 +26,7 @@ namespace SplitHunter.EXE.Tools
                 return elapsed;
             }
         }
+
         Split SelectedSplit
         {
             get
@@ -32,17 +35,26 @@ namespace SplitHunter.EXE.Tools
             }
         }
 
+
         Timer _timer;
         TimeSpan _bankedTime;
         DateTime _recordStartAt;
         bool _recording;
-        private Splits _splits;
-        private int _splitIndex;
-        private SplitEditor _parent;
+        Splits _splits;
+        int _splitIndex;
+        SplitEditor _parent;
+        KeyLogger _keyLogger;
+
+        Keys _toggleStartKey = Keys.NumPad5;
+        Keys _splitNowKey = Keys.NumPad0;
+        Keys _selectPreviousSplitKey = Keys.NumPad4;
+        Keys _selectNextSplitKey = Keys.NumPad6;
 
         public SimpleTimer(Splits splits, SplitEditor parent)
         {
             InitializeComponent();
+
+            SaveOnSplit = true;
 
             _parent = parent;
             _splits = splits;
@@ -53,7 +65,58 @@ namespace SplitHunter.EXE.Tools
             _timer.Tick += Render;
             _timer.Start();
 
+            _keyLogger = new KeyLogger(_toggleStartKey, _splitNowKey, _selectPreviousSplitKey, _selectNextSplitKey);
+            _keyLogger.OnKeyPressed += OnKeyPressedThreadSafe;
+            _keyLogger.Start();
+
+            this.PerformRecursive((control) =>
+            {
+                control.MouseClick += HandleClick;
+            });
+
             Render();
+        }
+
+        private void HandleClick(object sender, MouseEventArgs e)
+        {
+            if(sender is Control
+                && e.Button == MouseButtons.Right)
+            {
+                var mousePos = (sender as Control).GetWorldLocation();
+                mousePos.X += e.X;
+                mousePos.Y += e.Y;
+
+                RightClickContext.Show(mousePos);
+            }
+        }
+
+        public delegate void KeyPressedEventHandler(Keys key);
+
+        private void OnKeyPressedThreadSafe(Keys key)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new KeyPressedEventHandler(OnKeyPressedThreadSafe), key);
+            }
+            else
+            {
+                if(key == _toggleStartKey)
+                {
+                    ToggleRecording();
+                }
+                if (key == _splitNowKey)
+                {
+                    SplitNow();
+                }
+                if (key == _selectPreviousSplitKey)
+                {
+                    SelectPreviousSplit();
+                }
+                if (key == _selectNextSplitKey)
+                {
+                    SelectNextSplit();
+                }
+            }
         }
 
         void Render(object o = null, EventArgs e = null)
@@ -68,7 +131,7 @@ namespace SplitHunter.EXE.Tools
             SplitNameText.Text = SelectedSplit.Name;
         }
 
-        private void ToggleRecording(object sender, EventArgs e)
+        private void ToggleRecording(object o = null, EventArgs e = null)
         {
             if(_recording)
             {
@@ -97,7 +160,7 @@ namespace SplitHunter.EXE.Tools
             StartStopButton.Text = "Start";
         }
 
-        private void SelectPreviousSplit(object sender, EventArgs e)
+        private void SelectPreviousSplit(object o = null, EventArgs e = null)
         {
             if (_splitIndex <= 0)
                 return;
@@ -111,14 +174,14 @@ namespace SplitHunter.EXE.Tools
             _splitIndex++;
         }
 
-        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void resetToolStripMenuItem_Click(object o = null, EventArgs e = null)
         {
             StopRecording();
 
             _bankedTime = TimeSpan.FromSeconds(0);
         }
 
-        private void SplitNow(object sender, EventArgs e)
+        private void SplitNow(object o = null, EventArgs e = null)
         {
             _splits.Dirty = true;
             SelectedSplit.Current = Elapsed;
@@ -140,17 +203,33 @@ namespace SplitHunter.EXE.Tools
             {
                 SelectNextSplit();
             }
+
+            if(SaveOnSplit)
+            {
+                Save();
+            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == (Keys.Control | Keys.S))
             {
-                _parent.Save();
-                Render();
+                Save();
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void SimpleTimer_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _timer.Stop();
+            _keyLogger.Stop();
+        }
+
+        void Save()
+        {
+            _parent.Save();
+            Render();
         }
     }
 }

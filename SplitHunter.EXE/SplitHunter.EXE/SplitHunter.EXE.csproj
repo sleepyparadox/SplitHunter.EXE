@@ -60,6 +60,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Splits.cs" />
+    <Compile Include="Tools\KeyLogger.cs" />
+    <Compile Include="Tools\LowLevelKeyboardProc.cs" />
     <Compile Include="Tools\SimpleTimer.cs">
       <SubType>Form</SubType>
     </Compile>

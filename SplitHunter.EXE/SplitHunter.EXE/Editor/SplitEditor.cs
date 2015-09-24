@@ -133,8 +133,12 @@ namespace SplitHunter.EXE.Editor
 
         private void simpleTimerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CurrentSplits == null)
+            if (CurrentSplits == null
+                || !CurrentSplits.Any())
+            {
+                MessageBox.Show("Requires splits");
                 return;
+            }
 
             new SimpleTimer(CurrentSplits, this).Show();
         }
