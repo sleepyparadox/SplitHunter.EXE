@@ -20,14 +20,16 @@ namespace SplitHunter.EXE.Editor
         Label _editLabel;
 
         EditableNode _editingNode;
-        private SplitEditor _parent;
+        SplitEditor _parent;
 
-        public SplitTreeEditor(TreeView treeView, TextBox editText, Label editLabel, SplitEditor parent)
+        public SplitTreeEditor(TreeView treeView, TextBox editText, Label editLabel,  SplitEditor parent)
         {
+            //This is getting out of control, SplitTreeEditor should probably be a UserControl
             _parent = parent;
             _treeView = treeView;
+           
 
-            _treeView.Parent.Controls.Remove(editLabel);
+           _treeView.Parent.Controls.Remove(editLabel);
             _treeView.Controls.Add(editLabel);
 
             _treeView.Parent.Controls.Remove(editText);
@@ -43,6 +45,26 @@ namespace SplitHunter.EXE.Editor
             _treeView.Click += (o, e) => TryApplyEditChanges();
 
             _editText.KeyPress += CheckForEnterKey;
+        }
+
+        public Split GetSelectedSplit()
+        {
+            if (_treeView.SelectedNode == null)
+                return null;
+
+            //If split property node, select parent
+            if (_treeView.SelectedNode is EditableNode
+                && _treeView.SelectedNode.Parent != null)
+            {
+                _treeView.SelectedNode = _treeView.SelectedNode.Parent;
+            }
+
+            if (_treeView.SelectedNode is SplitNode)
+            {
+                return (_treeView.SelectedNode as SplitNode).Split;
+            }
+            
+            return null;
         }
 
         private void CheckForEnterKey(object sender, KeyPressEventArgs e)

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.loadSplitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,11 +38,17 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.simpleTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TreeView = new System.Windows.Forms.TreeView();
             this.EditText = new System.Windows.Forms.TextBox();
             this.EditLabel = new System.Windows.Forms.Label();
-            this.simpleTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.RightClickContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.AddSplitContextItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddBeforeContextItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AddAfterContextItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteSplitContextItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            this.RightClickContext.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -119,6 +126,13 @@
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
+            // simpleTimerToolStripMenuItem
+            // 
+            this.simpleTimerToolStripMenuItem.Name = "simpleTimerToolStripMenuItem";
+            this.simpleTimerToolStripMenuItem.Size = new System.Drawing.Size(172, 26);
+            this.simpleTimerToolStripMenuItem.Text = "Simple Timer";
+            this.simpleTimerToolStripMenuItem.Click += new System.EventHandler(this.simpleTimerToolStripMenuItem_Click);
+            // 
             // TreeView
             // 
             this.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -145,12 +159,44 @@
             this.EditLabel.Text = "Current: ";
             this.EditLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // simpleTimerToolStripMenuItem
+            // RightCLickContext
             // 
-            this.simpleTimerToolStripMenuItem.Name = "simpleTimerToolStripMenuItem";
-            this.simpleTimerToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.simpleTimerToolStripMenuItem.Text = "Simple Timer";
-            this.simpleTimerToolStripMenuItem.Click += new System.EventHandler(this.simpleTimerToolStripMenuItem_Click);
+            this.RightClickContext.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.RightClickContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddSplitContextItem,
+            this.DeleteSplitContextItem});
+            this.RightClickContext.Name = "RightCLickContext";
+            this.RightClickContext.Size = new System.Drawing.Size(163, 56);
+            // 
+            // AddSplitContextItem
+            // 
+            this.AddSplitContextItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddBeforeContextItem,
+            this.AddAfterContextItem});
+            this.AddSplitContextItem.Name = "AddSplitContextItem";
+            this.AddSplitContextItem.Size = new System.Drawing.Size(162, 26);
+            this.AddSplitContextItem.Text = "Add Split";
+            // 
+            // AddBeforeContextItem
+            // 
+            this.AddBeforeContextItem.Name = "AddBeforeContextItem";
+            this.AddBeforeContextItem.Size = new System.Drawing.Size(181, 26);
+            this.AddBeforeContextItem.Text = "Before";
+            this.AddBeforeContextItem.Click += new System.EventHandler(this.AddSplitBeforeSelection);
+            // 
+            // AddAfterContextItem
+            // 
+            this.AddAfterContextItem.Name = "AddAfterContextItem";
+            this.AddAfterContextItem.Size = new System.Drawing.Size(181, 26);
+            this.AddAfterContextItem.Text = "After";
+            this.AddAfterContextItem.Click += new System.EventHandler(this.AddSplitAfterSelection);
+            // 
+            // DeleteSplitContextItem
+            // 
+            this.DeleteSplitContextItem.Name = "DeleteSplitContextItem";
+            this.DeleteSplitContextItem.Size = new System.Drawing.Size(162, 26);
+            this.DeleteSplitContextItem.Text = "Delete Split";
+            this.DeleteSplitContextItem.Click += new System.EventHandler(this.DeleteSplit);
             // 
             // SplitEditor
             // 
@@ -166,6 +212,7 @@
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.RightClickContext.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -186,6 +233,11 @@
         private System.Windows.Forms.TextBox EditText;
         private System.Windows.Forms.Label EditLabel;
         private System.Windows.Forms.ToolStripMenuItem simpleTimerToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip RightClickContext;
+        private System.Windows.Forms.ToolStripMenuItem AddSplitContextItem;
+        private System.Windows.Forms.ToolStripMenuItem AddBeforeContextItem;
+        private System.Windows.Forms.ToolStripMenuItem AddAfterContextItem;
+        private System.Windows.Forms.ToolStripMenuItem DeleteSplitContextItem;
     }
 }
 

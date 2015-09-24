@@ -79,15 +79,15 @@ namespace SplitHunter.EXE.Tools
 
         private void HandleClick(object sender, MouseEventArgs e)
         {
-            if(sender is Control
-                && e.Button == MouseButtons.Right)
-            {
-                var mousePos = (sender as Control).GetWorldLocation();
-                mousePos.X += e.X;
-                mousePos.Y += e.Y;
+            if (e.Button != MouseButtons.Right
+                || !(sender is Control))
+                return;
 
-                RightClickContext.Show(mousePos);
-            }
+            var mousePos = (sender as Control).GetWorldLocation();
+            mousePos.X += e.X;
+            mousePos.Y += e.Y;
+
+            RightClickContext.Show(mousePos);
         }
 
         public delegate void KeyPressedEventHandler(Keys key);
@@ -129,6 +129,8 @@ namespace SplitHunter.EXE.Tools
             CurrentTimeText.Text = SelectedSplit.Current.NullableToString();
 
             SplitNameText.Text = SelectedSplit.Name;
+
+            SplitButton.Enabled = _recording;
         }
 
         private void ToggleRecording(object o = null, EventArgs e = null)
@@ -183,6 +185,9 @@ namespace SplitHunter.EXE.Tools
 
         private void SplitNow(object o = null, EventArgs e = null)
         {
+            if (!_recording)
+                return;
+
             _splits.Dirty = true;
             SelectedSplit.Current = Elapsed;
             if(!SelectedSplit.Best.HasValue

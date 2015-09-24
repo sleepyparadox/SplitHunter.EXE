@@ -15,7 +15,7 @@ namespace SplitHunter.EXE.Editor
 {
     public partial class SplitEditor : Form
     {
-        public Splits CurrentSplits
+        public Splits SelectedSplits
         {
             get { return _treeEditor.Value; }
             set
@@ -29,21 +29,57 @@ namespace SplitHunter.EXE.Editor
         {
             InitializeComponent();
             _treeEditor = new SplitTreeEditor(TreeView, EditText, EditLabel, this);
+
+            TreeView.PerformRecursive((control) =>
+            {
+                control.MouseClick += HandleClick;
+            });
             Render();
         }
 
+
+        private void HandleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            var mousePos = (sender as Control).GetWorldLocation();
+            mousePos.X += e.X;
+            mousePos.Y += e.Y;
+
+            RightClickContext.Enabled = SelectedSplits != null;
+
+            if (SelectedSplits == null)
+                return;
+
+            var selectedSplit = _treeEditor.GetSelectedSplit();
+            if (selectedSplit != null)
+            {
+                DeleteSplitContextItem.Text = "Delete \"" + selectedSplit.Name + "\"";
+                DeleteSplitContextItem.Enabled = true;
+            }
+            else
+            {
+                DeleteSplitContextItem.Text = "Delete Split";
+                DeleteSplitContextItem.Enabled = false;
+            }
+
+            RightClickContext.Show(mousePos);
+        }
+
+
         public void Render(object s = null, EventArgs e = null)
         {
-            if (CurrentSplits == null)
+            if (SelectedSplits == null)
                 Text = "SplitHunter.EXE";
             else
-                Text = (CurrentSplits.Dirty ? "*" : "") + CurrentSplits.Name;
+                Text = (SelectedSplits.Dirty ? "*" : "") + SelectedSplits.Name;
             _treeEditor.Render();
         }
 
         private void NewEmpty(object s = null, EventArgs e = null)
         {
-            CurrentSplits = Splits.NewEmpty();
+            SelectedSplits = Splits.NewEmpty();
         }
 
         private void CloneExisting(object s = null, EventArgs e = null)
@@ -51,7 +87,7 @@ namespace SplitHunter.EXE.Editor
             string path;
             if(OpenFileDialog(out path))
             {
-                CurrentSplits = Splits.CloneExisting(path.ToForwardPath());
+                SelectedSplits = Splits.CloneExisting(path.ToForwardPath());
             }
         }
 
@@ -60,7 +96,7 @@ namespace SplitHunter.EXE.Editor
             string path;
             if (OpenFileDialog(out path))
             {
-                CurrentSplits = Splits.Open(path.ToForwardPath());
+                SelectedSplits = Splits.Open(path.ToForwardPath());
             }
         }
 
@@ -89,13 +125,13 @@ namespace SplitHunter.EXE.Editor
 
         public void Save(object s = null, EventArgs e = null)
         {
-            if (!File.Exists(CurrentSplits.FullPath))
+            if (!File.Exists(SelectedSplits.FullPath))
             {
                 SaveAsClicked();
                 return;
             }
 
-            CurrentSplits.Save();
+            SelectedSplits.Save();
             Render();
         }
 
@@ -107,12 +143,12 @@ namespace SplitHunter.EXE.Editor
             var dialog = new SaveFileDialog();
             dialog.Filter = FileFilter;
             dialog.AutoUpgradeEnabled = false;
-            dialog.FileName = CurrentSplits.FullPath.ToBackSlashPath();
+            dialog.FileName = SelectedSplits.FullPath.ToBackSlashPath();
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                CurrentSplits.FullPath = dialog.FileName;
-                CurrentSplits.Save();
+                SelectedSplits.FullPath = dialog.FileName;
+                SelectedSplits.Save();
                 Render();
             }
         }
@@ -128,19 +164,80 @@ namespace SplitHunter.EXE.Editor
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private const string FileFilter = "txt (*.txt)|*.txt|csv (*.csv)|*.csv|All Files (*.*)|*.*";
-        private SplitTreeEditor _treeEditor;
-
         private void simpleTimerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CurrentSplits == null
-                || !CurrentSplits.Any())
+            if (SelectedSplits == null
+                || !SelectedSplits.Any())
             {
                 MessageBox.Show("Requires splits");
                 return;
             }
 
-            new SimpleTimer(CurrentSplits, this).Show();
+            new SimpleTimer(SelectedSplits, this).Show();
         }
+
+        private void AddSplitBeforeSelection(object sender, EventArgs e)
+        {
+            if (SelectedSplits == null)
+                return;
+
+            var newSplit = new Split()
+            {
+                Name = "New Split",
+            };
+
+            var selectedSplit = _treeEditor.GetSelectedSplit();
+            if (selectedSplit != null)
+            {
+                SelectedSplits.Insert(SelectedSplits.IndexOf(selectedSplit), newSplit);
+            }
+            else
+            {
+                SelectedSplits.Insert(0, newSplit);
+            }
+            SelectedSplits.Dirty = true;
+            Render();
+        }
+
+        private void AddSplitAfterSelection(object sender, EventArgs e)
+        {
+            if (SelectedSplits == null)
+                return;
+
+            var newSplit = new Split()
+            {
+                Name = "New Split",
+            };
+
+            var selectedSplit = _treeEditor.GetSelectedSplit();
+            if(selectedSplit != null)
+            {
+                SelectedSplits.Insert(SelectedSplits.IndexOf(selectedSplit) + 1, newSplit);
+            }
+            else
+            {
+                SelectedSplits.Insert(SelectedSplits.Count, newSplit);
+            }
+            SelectedSplits.Dirty = true;
+            Render();
+        }
+
+        private void DeleteSplit(object sender, EventArgs e)
+        {
+            if (SelectedSplits == null)
+                return;
+            var selectedSplit = _treeEditor.GetSelectedSplit();
+            if (selectedSplit == null
+                || !SelectedSplits.Contains(selectedSplit))
+                return;
+
+            SelectedSplits.Remove(selectedSplit);
+            SelectedSplits.Dirty = true;
+            Render();
+        }
+
+        private const string FileFilter = "txt (*.txt)|*.txt|csv (*.csv)|*.csv|All Files (*.*)|*.*";
+        private SplitTreeEditor _treeEditor;
+        private Split _contextSplit;
     }
 }
