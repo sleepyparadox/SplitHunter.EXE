@@ -1,4 +1,5 @@
 ﻿using SplitHunter.EXE.Data;
+using SplitHunter.EXE.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,7 +38,7 @@ namespace SplitHunter.EXE.Editor
                 Text = "SplitHunter.EXE";
             else
                 Text = (CurrentSplits.Dirty ? "*" : "") + CurrentSplits.Name;
-            _treeEditor.Refresh();
+            _treeEditor.Render();
         }
 
         private void NewEmpty(object s = null, EventArgs e = null)
@@ -86,7 +87,7 @@ namespace SplitHunter.EXE.Editor
             }
         }
 
-        private void Save(object s = null, EventArgs e = null)
+        public void Save(object s = null, EventArgs e = null)
         {
             if (!File.Exists(CurrentSplits.FullPath))
             {
@@ -129,5 +130,13 @@ namespace SplitHunter.EXE.Editor
 
         private const string FileFilter = "txt (*.txt)|*.txt|csv (*.csv)|*.csv|All Files (*.*)|*.*";
         private SplitTreeEditor _treeEditor;
+
+        private void simpleTimerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (CurrentSplits == null)
+                return;
+
+            new SimpleTimer(CurrentSplits, this).Show();
+        }
     }
 }

@@ -30,7 +30,11 @@ namespace SplitHunter.EXE.Editor
         {
             Text = Split.Name;
             _nameNode.RenderText();
+
+            _bestNode.Value = Split.Best.NullableToString();
             _bestNode.RenderText();
+
+            _currentNode.Value = Split.Current.NullableToString();
             _currentNode.RenderText();
         }
 

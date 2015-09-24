@@ -49,6 +49,10 @@ namespace SplitHunter.EXE.Data
 
             splits.FullPath = fileInfo.Directory + "/" + newFileName;
 
+            foreach (var split in splits)
+            {
+                split.Current = null;
+            }
             splits.Dirty = true;
             return splits;
         }

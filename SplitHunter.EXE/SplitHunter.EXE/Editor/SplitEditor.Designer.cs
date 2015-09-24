@@ -40,6 +40,7 @@
             this.TreeView = new System.Windows.Forms.TreeView();
             this.EditText = new System.Windows.Forms.TextBox();
             this.EditLabel = new System.Windows.Forms.Label();
+            this.simpleTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,7 +73,7 @@
             this.runToolStripMenuItem,
             this.emptyToolStripMenuItem});
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.newToolStripMenuItem.Text = "New";
             // 
             // runToolStripMenuItem
@@ -92,26 +93,28 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.Open);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.Save);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsClicked);
             // 
             // toolsToolStripMenuItem
             // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.simpleTimerToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(57, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -141,6 +144,13 @@
             this.EditLabel.TabIndex = 3;
             this.EditLabel.Text = "Current: ";
             this.EditLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // simpleTimerToolStripMenuItem
+            // 
+            this.simpleTimerToolStripMenuItem.Name = "simpleTimerToolStripMenuItem";
+            this.simpleTimerToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.simpleTimerToolStripMenuItem.Text = "Simple Timer";
+            this.simpleTimerToolStripMenuItem.Click += new System.EventHandler(this.simpleTimerToolStripMenuItem_Click);
             // 
             // SplitEditor
             // 
@@ -175,6 +185,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.TextBox EditText;
         private System.Windows.Forms.Label EditLabel;
+        private System.Windows.Forms.ToolStripMenuItem simpleTimerToolStripMenuItem;
     }
 }
 

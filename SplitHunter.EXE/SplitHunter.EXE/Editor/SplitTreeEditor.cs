@@ -13,7 +13,7 @@ namespace SplitHunter.EXE.Editor
     public class SplitTreeEditor
     {
         public Splits Value { get; set; }
-        List<SplitNode> _nodes = new List<SplitNode>();
+        Dictionary<Split, SplitNode> _splitToNodeMapping = new Dictionary<Split, SplitNode>();
 
         TreeView _treeView;
         TextBox _editText;
@@ -53,7 +53,7 @@ namespace SplitHunter.EXE.Editor
             }
         }
 
-        public void Refresh()
+        public void Render()
         {
             if (Value == null)
             {
@@ -61,25 +61,55 @@ namespace SplitHunter.EXE.Editor
                 return;
             }
             _treeView.Visible = true;
-            
-            //Remove deleted nodes
-            var nodesToRemove = _nodes.Where(n => Value.Contains(n.Split));
-            foreach (var node in nodesToRemove)
-                _treeView.Nodes.Remove(node);
 
-            if (Value.Any())
+            for (var index = 0; index < Value.Count; index++)
             {
-                foreach (var split in Value)
+                var split = Value[index];
+                SplitNode splitNode;
+                if (_splitToNodeMapping.ContainsKey(split))
                 {
-                    var node = _nodes.FirstOrDefault(n => n.Split == split);
-
-                    if (node == null)
-                        node = new SplitNode(split);
-
-                    _treeView.Nodes.Add(node);
+                    splitNode = _splitToNodeMapping[split];
                 }
+                else
+                {
+                    splitNode = new SplitNode(split);
+                    _splitToNodeMapping.Add(split, splitNode);
+                }
+
+                //Update text
+                splitNode.Render();
+
+                if (index < _treeView.Nodes.Count
+                    && _treeView.Nodes[index] == splitNode)
+                {
+                    //Already in place
+                    continue;
+                }
+
+                if (_treeView.Nodes.Contains(splitNode))
+                {
+                    //In wrong place
+                    _treeView.Nodes.Remove(splitNode);
+                }
+
+                //Insert correct spot
+                _treeView.Nodes.Insert(index, splitNode);
             }
-            else
+
+            //Remove excess nodes
+            while(_treeView.Nodes.Count > Value.Count)
+            {
+                _treeView.Nodes.RemoveAt(_treeView.Nodes.Count - 1);
+            }
+
+            //Remove deleted split bindings
+            var keysToRemove = _splitToNodeMapping.Keys.Where(key => !Value.Contains(key)).ToList();
+            foreach(var key in keysToRemove)
+            {
+                _splitToNodeMapping.Remove(key);
+            }
+
+            if(_treeView.Nodes.Count == 0)
             {
                 _treeView.Nodes.Add(new TreeNode("//empty"));
             }
